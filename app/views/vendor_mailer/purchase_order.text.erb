@@ -1,0 +1,7 @@
+Hello <%= @style_purchase_order.vendor.name %>,
+
+Please confirm purchase order <%= @style_purchase_order.po_number %> for <%= @style_purchase_order.style.style_number %> <%= @style_purchase_order.style.name %>.
+
+<% @colorway_items.each do |item| -%>
+- <%= item.colorway_style.colorway.name %>: <%= item.units_requested %> units, deliver by <%= item.delivery_date %>
+<% end -%>
