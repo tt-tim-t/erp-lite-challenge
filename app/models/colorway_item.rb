@@ -16,6 +16,9 @@ class ColorwayItem < ApplicationRecord
   has_many :reservations, through: :materials
 
   scope :active, -> { where(status: "active") }
+  scope :upcoming, lambda {
+    where("COALESCE(revised_delivery_date, original_delivery_date) >= ?", Date.current)
+  }
 
   validates :status, inclusion: { in: STATUSES }
   validates :units_requested, numericality: { greater_than_or_equal_to: 0 }

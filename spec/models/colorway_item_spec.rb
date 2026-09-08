@@ -1,6 +1,26 @@
 require "rails_helper"
 
 RSpec.describe ColorwayItem do
+  describe ".upcoming" do
+    it "includes items delivering in the future" do
+      item = create(:colorway_item, original_delivery_date: Date.new(2026, 9, 30))
+
+      expect(described_class.upcoming).to include(item)
+    end
+
+    it "excludes items whose delivery date has passed" do
+      item = create(:colorway_item, original_delivery_date: 2.weeks.ago.to_date)
+
+      expect(described_class.upcoming).not_to include(item)
+    end
+
+    it "prefers the revised delivery date over the original" do
+      item = create(:colorway_item, original_delivery_date: 1.month.from_now.to_date, revised_delivery_date: 1.week.ago.to_date)
+
+      expect(described_class.upcoming).not_to include(item)
+    end
+  end
+
   describe "extended cost" do
     it "multiplies unit cost by units requested" do
       item = create(:colorway_item, unit_cost_cents: 2_550, units_requested: 40)

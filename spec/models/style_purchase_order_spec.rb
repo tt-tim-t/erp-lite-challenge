@@ -42,4 +42,13 @@ RSpec.describe StylePurchaseOrder do
       expect(described_class.search("").count).to eq(2)
     end
   end
+
+  describe ".with_upcoming_deliveries" do
+    it "returns SPOs with at least one active colorway delivering in the future" do
+      upcoming = create(:colorway_item, original_delivery_date: 3.weeks.from_now.to_date).style_purchase_order
+      create(:colorway_item, original_delivery_date: 3.weeks.ago.to_date)
+
+      expect(described_class.with_upcoming_deliveries).to contain_exactly(upcoming)
+    end
+  end
 end

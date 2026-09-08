@@ -7,6 +7,7 @@ module Api
 
       scope = policy_scope(StylePurchaseOrder).search(params[:q])
       scope = scope.where(state: params[:state]) if params[:state].present?
+      scope = scope.with_upcoming_deliveries if params[:upcoming] == "true"
 
       records = scope.order(created_at: :desc).limit(per_page).offset((page - 1) * per_page)
       render_success(

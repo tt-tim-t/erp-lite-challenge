@@ -21,6 +21,10 @@ class StylePurchaseOrder < ApplicationRecord
   validates :po_number, presence: true, uniqueness: true
   validate :totals_frozen_outside_editable_states, on: :update
 
+  scope :with_upcoming_deliveries, lambda {
+    where(id: ColorwayItem.active.upcoming.select(:style_purchase_order_id))
+  }
+
   def self.search(term)
     return all if term.blank?
 
