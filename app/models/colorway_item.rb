@@ -61,14 +61,7 @@ class ColorwayItem < ApplicationRecord
     saved_change_to_extended_cost_cents? || saved_change_to_units_requested? || saved_change_to_status?
   end
 
-  # Totals are frozen once the SPO leaves an editable state.
   def recalculate_purchase_order_totals
-    return unless style_purchase_order.editable?
-
-    items = style_purchase_order.colorway_items.active
-    style_purchase_order.update!(
-      total_units: items.sum(:units_requested),
-      total_cost_cents: items.sum(:extended_cost_cents)
-    )
+    StylePurchaseOrders::RecalculateTotals.call(style_purchase_order)
   end
 end
