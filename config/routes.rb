@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     end
 
     resources :vendors, only: :index
+
+    get "reports/landed_cost", to: "reports#landed_cost"
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
